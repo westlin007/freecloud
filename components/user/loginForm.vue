@@ -49,13 +49,27 @@ export default {
         if (valid) {
           this.$axios({
             url: "/accounts/login",
-            method: "POST",
+            method: "POST", // method没有s
             data: this.form
           }).then(res => {
-            console.log(res.data);
+            // 如何调用mutations下的setUserInfo的方法 commit
+            // commit接受两个参数，第一个mutations参数是方法名，第二个参数数据
+            this.$store.commit("user/setUserInfo", res.data);
+            // 成功提示
+            this.$message({
+              message: "登录成功，正在跳转",
+              type: "success"
+            });
+            // 跳转到首页
+            setTimeout(() => {
+              this.$router.replace("/");
+            }, 1000);
           });
-        }else{
-            alert('请输入用户名或密码')
+        } else {
+          this.$message({
+            message: "请输入用户名或密码",
+            type: "warning"
+          });
         }
       });
     }
