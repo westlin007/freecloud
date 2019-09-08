@@ -75,8 +75,8 @@ export default {
       ],
       currentTab: 0,
       form: {
-        departCity: "", // 出发城市
-        departCode: "", // 出发城市代码
+        departCity: "",
+        departCode: "",
         destCity: "",
         destCode: "",
         departDate: ""
