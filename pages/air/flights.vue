@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <FlightsFilters :data="cacheFlightsData" @setDataList="setDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -44,18 +44,30 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
+import FlightsFilters from "@/components/air/flightsFilters.vue";
 export default {
   data() {
     return {
-      flightsData: {}, //航班数据
+      flightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      }, //航班数据
       dataList: [], //航班列表数据，用于分页
       pageIndex: 1, // 当前页数
-      pageSize: 5 // 显示条数
+      pageSize: 5, // 显示条数
+      cacheFlightsData: {
+        // 缓存一份数据，只会修改一次
+        flights: [],
+        info: {},
+        options: {}
+      }
     };
   },
   components: {
     FlightsListHead,
-    FlightsItem
+    FlightsItem,
+    FlightsFilters
   },
 
   methods: {
@@ -66,12 +78,20 @@ export default {
         params: this.$route.query // 来自URL的5个参数
       }).then(res => {
         this.flightsData = res.data;
+        // 缓存一份新的列表数据数据，这个列表不会被修改
+        this.cacheFlightsData = { ...res.data };
         this.setDataList(); // 初始化dataList数据，获取1 - 10条
       });
     },
 
     // 设置dataList数据
-    setDataList() {
+    setDataList(arr) {
+      if (arr) {
+        this.pageIndex = 1;
+        this.flightsData.flights = arr;
+        this.flightsData.total = arr.length;
+      }
+
       const start = (this.pageIndex - 1) * this.pageSize;
       const end = start + this.pageSize;
       this.dataList = this.flightsData.flights.slice(start, end);
