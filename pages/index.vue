@@ -89,7 +89,6 @@ export default {
     }).then(res => {
       const data = res.data.data;
       this.banners = data;
-      console.log(res);
     });
   },
   methods: {
