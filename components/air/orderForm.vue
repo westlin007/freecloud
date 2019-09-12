@@ -64,7 +64,7 @@
       </div>
     </div>
     <!-- 调用计算属性 -->
-    <input type="hidden" :value="allPrice">
+    <input type="hidden" :value="allPrice" />
   </div>
 </template>
 
@@ -184,12 +184,14 @@ export default {
         }
       })
         .then(res => {
+          const {data: { id }} = res.data;
           // 跳转到付款页
           setTimeout(() => {
             this.$router.push({
-              path: "/air/pay"
+              path: "/air/pay",
+              query: { id }
             });
-          }, 3000);
+          }, 2000);
         })
         .catch(err => {
           const { message } = err.response.data;
@@ -205,7 +207,6 @@ export default {
   computed: {
     // 计算总价格
     allPrice() {
-      console.log(123);
       let price = 0;
       let len = this.users.length;
 
