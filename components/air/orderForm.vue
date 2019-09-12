@@ -63,6 +63,8 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <!-- 调用计算属性 -->
+    <input type="hidden" :value="allPrice">
   </div>
 </template>
 
@@ -198,6 +200,27 @@ export default {
             type: "warning"
           });
         });
+    }
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      console.log(123);
+      let price = 0;
+      let len = this.users.length;
+
+      price += this.data.seat_infos.org_settle_price * len;
+
+      this.insurances.forEach(v => {
+        price += this.data.insurances[v - 1].price * len;
+      });
+
+      price += this.data.airport_tax_audlet * len;
+
+      // 触发设置总金额事件
+      this.$emit("setAllPrice", price);
+
+      return price;
     }
   }
 };
